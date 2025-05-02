@@ -6,16 +6,42 @@ import styles from "./Home.module.css";
 import groceryIcon from "./assets/images/grocery.png";
 import foodsIcon from "./assets/images/foods.png";
 import clothesIcon from "./assets/images/clothes.png";
-import education from "./assets/images/education.png";
+import educationIcon from "./assets/images/education.png";
 import billsIcon from "./assets/images/electricity bill.png";
+import shoppingIcon from "./assets/images/shopping.png";
 import othersIcon from "./assets/images/others.png";
 import addIcon from "./assets/images/plus.png";
-import React, { useState } from "react";
+import depositIcon from "./assets/images/deposit.png";
+import closeIcon from "./assets/images/close-btn.png";
+import backIcon from "./assets/images/back-btn.png";
+import React, { useState, useRef, use } from "react";
 
 export default function Home() {
+  const addActivityModal = useRef();
+  const typeModal = useRef();
+
+  const openActivityModal = () => {
+    addActivityModal.current.style.display = "block";
+  };
+
+  const closeActivityModal = () => {
+    addActivityModal.current.style.display = "none";
+  };
+
+  const openTypeModal = () => {
+    typeModal.current.style.display = "block";
+    addActivityModal.current.style.display = "none";
+  };
+
+  const closeTypeModal = () => {
+    typeModal.current.style.display = "none";
+    addActivityModal.current.style.display = "block";
+  };
+
   return (
     <>
       <div className={styles.home}>
+        {/* Profile Section */}
         <div className={styles.profileSection}>
           <div className={styles.profileName}>
             <img src={profile} className={styles.profileImg} />
@@ -36,12 +62,14 @@ export default function Home() {
         </div>
 
         <div className={styles.mainSecContainer}>
+          {/* Top - Website name */}
           <div className={styles.topSection}>
             <h1>Expenses Tracker</h1>
             <h3>Track Your Expenses!</h3>
           </div>
 
           <div className={styles.mainWrapper}>
+            {/* Current Balance and Expenses */}
             <div className={styles.balExpensesWrapper}>
               <div className={styles.balContainer}>
                 <div className={styles.balance}>
@@ -78,6 +106,7 @@ export default function Home() {
             </div>
 
             <div className={styles.recentActWrapper}>
+              {/* Recent Acitivities */}
               <div className={styles.recentTop}>
                 <h2>Recent Activity</h2>
                 <img
@@ -122,9 +151,84 @@ export default function Home() {
                 </div>
               </div>
             </div>
-
+            {/* Add Activity Button */}
             <div className={styles.addIconContainer}>
-              <img src={addIcon} />
+              <img src={addIcon} onClick={openActivityModal} />
+            </div>
+
+            {/* --------- MODAlS --------- */}
+            {/* Add Activity Modal */}
+            <div className={styles.addActivityModal} ref={addActivityModal}>
+              {/* Contents of Add Activity Modal */}
+              <div className={styles.addActivityContent}>
+                <div className={styles.activityTop}>
+                  <h1>Add Acitivity</h1>
+                  <img
+                    src={closeIcon}
+                    className={styles.closeBtn}
+                    onClick={closeActivityModal}
+                  />
+                </div>
+
+                {/* Choices for Activity Types */}
+                <div className={styles.choices}>
+                  <div className={styles.addExpenses} onClick={openTypeModal}>
+                    <img src={expensesImg} />
+                    <h1>Expenses</h1>
+                  </div>
+                  <div className={styles.deposit}>
+                    <img src={depositIcon} />
+                    <h1>Deposit</h1>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Select Type of Expenses Moda */}
+            <div className={styles.selectTypeModal} ref={typeModal}>
+              {/* Contents of Select Type Modal  */}
+              <div className={styles.selectTypeContent}>
+                <div className={styles.selectTypeTop}>
+                  <h1>Select Type</h1>
+                  <img
+                    src={backIcon}
+                    className={styles.backBtn}
+                    onClick={closeTypeModal}
+                  />
+                </div>
+
+                {/* Choice for Expenses Type */}
+                <div className={styles.selectTypeChoices}>
+                  <div className={styles.grocery}>
+                    <img src={groceryIcon} />
+                    <h3>Grocery</h3>
+                  </div>
+                  <div className={styles.foods}>
+                    <img src={foodsIcon} />
+                    <h3>Foods</h3>
+                  </div>
+                  <div className={styles.clothes}>
+                    <img src={clothesIcon} />
+                    <h3>Clothes</h3>
+                  </div>
+                  <div className={styles.education}>
+                    <img src={educationIcon} />
+                    <h3>Education</h3>
+                  </div>
+                  <div className={styles.bills}>
+                    <img src={billsIcon} />
+                    <h3>Bills</h3>
+                  </div>
+                  <div className={styles.shopping}>
+                    <img src={shoppingIcon} />
+                    <h3>Shopping</h3>
+                  </div>
+                  <div className={styles.others}>
+                    <img src={othersIcon} />
+                    <h3>Others</h3>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
