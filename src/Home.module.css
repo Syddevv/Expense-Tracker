@@ -348,9 +348,9 @@ a {
   margin-top: 10px;
 }
 
-/* SELECT TYPE MODAL */
+/* SELECT TYPE MODAL (EXPENSES) */
 
-.selectTypeModal {
+.expensesTypeModal {
   position: fixed;
   z-index: 1000;
   left: 0;
@@ -362,7 +362,7 @@ a {
   display: none;
 }
 
-.selectTypeContent {
+.expensesTypeContent {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -375,14 +375,14 @@ a {
   margin-left: 50%;
 }
 
-.selectTypeTop {
+.expensesTypeTop {
   display: flex;
   align-items: center;
   margin-bottom: 12px;
   margin-top: 5px;
 }
 
-.selectTypeTop img {
+.expensesTypeTop img {
   width: 27px;
   position: absolute;
   top: 10px;
@@ -390,21 +390,21 @@ a {
   cursor: pointer;
 }
 
-.selectTypeTop h1 {
+.expensesTypeTop h1 {
   font-size: 1.8rem;
 }
 
-.selectTypeChoices {
+.expensesTypeChoices {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 17px;
 }
 
-.selectTypeChoices img {
+.expensesTypeChoices img {
   width: 25px;
 }
 
-.selectTypeChoices h3 {
+.expensesTypeChoices h3 {
   font-weight: 500;
   font-size: 1rem;
   font-family: "Roboto Mono";
@@ -426,4 +426,177 @@ a {
   border-radius: 10px;
   margin-bottom: 10px;
   cursor: pointer;
+}
+
+/* SELECT TYPE MODAL (DEPOSIT) */
+
+.depositTypeModal {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+}
+
+.depositTypeContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  width: 400px;
+  height: 440px;
+  border-radius: 10px;
+  position: relative;
+  margin: 16% auto;
+  margin-left: 50%;
+}
+
+.depositTypeTop {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  margin-top: 5px;
+}
+
+.depositTypeTop img {
+  width: 27px;
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  cursor: pointer;
+}
+
+.depositTypeTop h1 {
+  font-size: 1.8rem;
+}
+
+.depositTypeChoices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 17px;
+}
+
+.depositTypeChoices img {
+  width: 25px;
+}
+
+.deposittTypeChoices h3 {
+  font-weight: 500;
+  font-size: 1rem;
+  font-family: "Roboto Mono";
+}
+
+.allowance,
+.salary,
+.loan {
+  display: flex;
+  align-items: center;
+  background-color: RGB(130, 132, 255);
+  color: white;
+  gap: 10px;
+  padding: 2px 15px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+/* DETAILS MODAL */
+
+.detailsModal {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+}
+
+.detailsContent {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  align-items: center;
+  width: 550px;
+  border-radius: 10px;
+  position: relative;
+  margin: 17% auto;
+  margin-left: 45%;
+}
+
+.detailsTop {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+  margin-top: 5px;
+}
+
+.detailsTop img {
+  width: 27px;
+  cursor: pointer;
+  position: absolute;
+  top: 15px;
+  left: 20px;
+}
+
+.inputs {
+  display: flex;
+  align-items: center;
+  margin-top: 0;
+  justify-content: center;
+}
+
+.amountInput {
+  font-family: "Roboto Flex";
+  font-size: 1rem;
+  padding: 5px 12px;
+  border: 1px solid black;
+  border-radius: 5px;
+  background-color: rgb(243, 243, 243);
+  margin-left: 5px;
+  margin-right: 15px;
+}
+
+.dateInput {
+  padding: 5px 12px;
+  border-radius: 5px;
+  margin-left: 5px;
+  border: 1px solid black;
+}
+
+.inputs h3 {
+  font-weight: 500;
+  margin-right: 10px;
+}
+
+.confirmBtn {
+  margin-top: 15px;
+  margin-bottom: 20px;
+  background-color: rgb(96, 98, 216);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.topText {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.topText h5 {
+  margin-top: 0;
+  font-weight: 500;
+}
+
+.topText h1 {
+  margin-bottom: 0;
 }

@@ -14,11 +14,16 @@ import addIcon from "./assets/images/plus.png";
 import depositIcon from "./assets/images/deposit.png";
 import closeIcon from "./assets/images/close-btn.png";
 import backIcon from "./assets/images/back-btn.png";
-import React, { useState, useRef, use } from "react";
+import allowanceIcon from "./assets/images/allowance.png";
+import salaryIcon from "./assets/images/salary.png";
+import loanIcon from "./assets/images/salary.png";
+import React, { useState, useRef } from "react";
 
 export default function Home() {
   const addActivityModal = useRef();
-  const typeModal = useRef();
+  const expensesModal = useRef();
+  const depositModal = useRef();
+  const detailsModal = useRef();
 
   const openActivityModal = () => {
     addActivityModal.current.style.display = "block";
@@ -28,14 +33,68 @@ export default function Home() {
     addActivityModal.current.style.display = "none";
   };
 
-  const openTypeModal = () => {
-    typeModal.current.style.display = "block";
+  const openExpensesModal = () => {
+    expensesModal.current.style.display = "block";
     addActivityModal.current.style.display = "none";
   };
 
-  const closeTypeModal = () => {
-    typeModal.current.style.display = "none";
+  const closeExpensesModal = () => {
+    expensesModal.current.style.display = "none";
     addActivityModal.current.style.display = "block";
+  };
+
+  const openDepositModal = () => {
+    depositModal.current.style.display = "block";
+    addActivityModal.current.style.display = "none";
+  };
+
+  const closeDepositModal = () => {
+    depositModal.current.style.display = "none";
+    addActivityModal.current.style.display = "block";
+  };
+
+  const openDetailsModal = () => {
+    expensesModal.current.style.display = "none";
+    depositModal.current.style.display = "none";
+    detailsModal.current.style.display = "block";
+  };
+
+  const closeDetailsModal = () => {
+    detailsModal.current.style.display = "none";
+    addActivityModal.current.style.display = "block";
+  };
+
+  const [activityType, setActivityType] = useState("");
+  const [balance, setBalance] = useState(1000);
+  const [expenses, setExpenses] = useState(0);
+  const [updateType, setUpdateType] = useState("");
+  const [date, setDate] = useState("");
+
+  const amountRef = useRef();
+
+  function setActivity(activity) {
+    setActivityType(activity);
+  }
+
+  function getUpdateType(type) {
+    setUpdateType(type);
+  }
+
+  const handleConfirm = () => {
+    const value = parseFloat(amountRef.current.value);
+    if (isNaN(value) || value <= 0) {
+      console.log("Invalid amount");
+      return;
+    }
+
+    if (balance >= value) {
+      setBalance(balance - value);
+      console.log("Update: -", value);
+      setExpenses((prev) => prev + value);
+      console.log(balance);
+    } else {
+      console.log("Not enough balance");
+    }
   };
 
   return (
@@ -75,7 +134,7 @@ export default function Home() {
                 <div className={styles.balance}>
                   <h2 className={styles.text}>Current Balance</h2>
                   <h1 className={styles.balanceAmount} id="balance">
-                    PHP 8, 500
+                    PHP {balance}
                   </h1>
                   <h3 className={styles.date}>April 30, 2025</h3>
                 </div>
@@ -100,7 +159,7 @@ export default function Home() {
 
                 <div className={styles.expenses}>
                   <h2>Total Expenses</h2>
-                  <h1 id="expensesValue">PHP 2, 500</h1>
+                  <h1 id="expensesValue">PHP {expenses}</h1>
                 </div>
               </div>
             </div>
@@ -157,6 +216,7 @@ export default function Home() {
             </div>
 
             {/* --------- MODAlS --------- */}
+
             {/* Add Activity Modal */}
             <div className={styles.addActivityModal} ref={addActivityModal}>
               {/* Contents of Add Activity Modal */}
@@ -172,11 +232,15 @@ export default function Home() {
 
                 {/* Choices for Activity Types */}
                 <div className={styles.choices}>
-                  <div className={styles.addExpenses} onClick={openTypeModal}>
+                  <div
+                    className={styles.addExpenses}
+                    onClick={openExpensesModal}
+                  >
                     <img src={expensesImg} />
                     <h1>Expenses</h1>
                   </div>
-                  <div className={styles.deposit}>
+
+                  <div className={styles.deposit} onClick={openDepositModal}>
                     <img src={depositIcon} />
                     <h1>Deposit</h1>
                   </div>
@@ -184,50 +248,192 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Select Type of Expenses Moda */}
-            <div className={styles.selectTypeModal} ref={typeModal}>
+            {/* Select Type of Expenses Modal */}
+            <div className={styles.expensesTypeModal} ref={expensesModal}>
               {/* Contents of Select Type Modal  */}
-              <div className={styles.selectTypeContent}>
-                <div className={styles.selectTypeTop}>
+              <div className={styles.expensesTypeContent}>
+                <div className={styles.expensesTypeTop}>
                   <h1>Select Type</h1>
                   <img
                     src={backIcon}
                     className={styles.backBtn}
-                    onClick={closeTypeModal}
+                    onClick={closeExpensesModal}
                   />
                 </div>
 
                 {/* Choice for Expenses Type */}
-                <div className={styles.selectTypeChoices}>
-                  <div className={styles.grocery}>
+                <div className={styles.expensesTypeChoices}>
+                  <div
+                    className={styles.grocery}
+                    onClick={() => {
+                      openDetailsModal();
+                      setActivity("Grocery");
+                      getUpdateType("Expenses");
+                    }}
+                  >
                     <img src={groceryIcon} />
                     <h3>Grocery</h3>
                   </div>
-                  <div className={styles.foods}>
+                  <div
+                    className={styles.foods}
+                    onClick={() => {
+                      openDetailsModal();
+                      setActivity("Foods");
+                      getUpdateType("Expenses");
+                    }}
+                  >
                     <img src={foodsIcon} />
                     <h3>Foods</h3>
                   </div>
-                  <div className={styles.clothes}>
+                  <div
+                    className={styles.clothes}
+                    onClick={() => {
+                      openDetailsModal();
+                      setActivity("Clothes");
+                      getUpdateType("Expenses");
+                    }}
+                  >
                     <img src={clothesIcon} />
                     <h3>Clothes</h3>
                   </div>
-                  <div className={styles.education}>
+                  <div
+                    className={styles.education}
+                    onClick={() => {
+                      openDetailsModal();
+                      setActivity("Education");
+                      getUpdateType("Expenses");
+                    }}
+                  >
                     <img src={educationIcon} />
                     <h3>Education</h3>
                   </div>
-                  <div className={styles.bills}>
+                  <div
+                    className={styles.bills}
+                    onClick={() => {
+                      openDetailsModal();
+                      setActivity("Bills");
+                      getUpdateType("Expenses");
+                    }}
+                  >
                     <img src={billsIcon} />
                     <h3>Bills</h3>
                   </div>
-                  <div className={styles.shopping}>
+                  <div
+                    className={styles.shopping}
+                    onClick={() => {
+                      openDetailsModal();
+                      setActivity("Shopping");
+                      getUpdateType("Expenses");
+                    }}
+                  >
                     <img src={shoppingIcon} />
                     <h3>Shopping</h3>
                   </div>
-                  <div className={styles.others}>
+                  <div
+                    className={styles.others}
+                    onClick={() => {
+                      openDetailsModal();
+                      setActivity("Others");
+                      getUpdateType("Expenses");
+                    }}
+                  >
                     <img src={othersIcon} />
                     <h3>Others</h3>
                   </div>
                 </div>
+              </div>
+            </div>
+
+            <div className={styles.depositTypeModal} ref={depositModal}>
+              <div className={styles.depositTypeContent}>
+                <div className={styles.depositTypeTop}>
+                  <h1>Select Type</h1>
+                  <img
+                    src={backIcon}
+                    className={styles.backBtn}
+                    onClick={closeDepositModal}
+                  />
+                </div>
+
+                {/* Choice for Deposit Type */}
+                <div className={styles.depositTypeChoices}>
+                  <div
+                    className={styles.allowance}
+                    onClick={() => {
+                      openDetailsModal();
+                      setActivity("Allowance");
+                      getUpdateType("Deposit");
+                    }}
+                  >
+                    <img src={allowanceIcon} />
+                    <h3>Allowance</h3>
+                  </div>
+                  <div
+                    className={styles.salary}
+                    onClick={() => {
+                      openDetailsModal();
+                      setActivity("Salary");
+                      getUpdateType("Deposit");
+                    }}
+                  >
+                    <img src={salaryIcon} />
+                    <h3>Salary</h3>
+                  </div>
+                  <div
+                    className={styles.loan}
+                    onClick={() => {
+                      openDetailsModal();
+                      getUpdateType("Deposit");
+                    }}
+                  >
+                    <img src={loanIcon} />
+                    <h3>Loan</h3>
+                  </div>
+                  <div
+                    className={styles.others}
+                    onClick={() => {
+                      openDetailsModal();
+                      setActivity("Others");
+                      getUpdateType("Deposit");
+                    }}
+                  >
+                    <img src={othersIcon} />
+                    <h3>Others</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.detailsModal} ref={detailsModal}>
+              <div className={styles.detailsContent}>
+                <div className={styles.detailsTop}>
+                  <div className={styles.topText}>
+                    <h1>Details</h1>
+                    <h5>({activityType})</h5>
+                  </div>
+
+                  <img
+                    src={backIcon}
+                    className={styles.backBtn}
+                    onClick={closeDetailsModal}
+                  />
+                </div>
+
+                <div className={styles.inputs}>
+                  <h3>Amount</h3>
+                  <input
+                    type="text"
+                    placeholder="Enter amount"
+                    ref={amountRef}
+                    className={styles.amountInput}
+                  />
+
+                  <h3>Date</h3>
+                  <input type="date" className={styles.dateInput} />
+                </div>
+                <button className={styles.confirmBtn} onClick={handleConfirm}>
+                  Confirm
+                </button>
               </div>
             </div>
           </div>
