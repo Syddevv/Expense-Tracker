@@ -71,6 +71,7 @@ export default function Home() {
   const [date, setDate] = useState("");
 
   const amountRef = useRef();
+  const dateRef = useRef();
 
   function setActivity(activity) {
     setActivityType(activity);
@@ -82,6 +83,7 @@ export default function Home() {
 
   const handleConfirm = () => {
     const value = parseFloat(amountRef.current.value);
+    const date = dateRef.current.value;
     if (isNaN(value) || value <= 0) {
       console.log("Invalid amount");
       return;
@@ -92,6 +94,7 @@ export default function Home() {
       console.log("Update: -", value);
       setExpenses((prev) => prev + value);
       console.log(balance);
+      console.log(date);
     } else {
       console.log("Not enough balance");
     }
@@ -429,7 +432,11 @@ export default function Home() {
                   />
 
                   <h3>Date</h3>
-                  <input type="date" className={styles.dateInput} />
+                  <input
+                    type="date"
+                    className={styles.dateInput}
+                    ref={dateRef}
+                  />
                 </div>
                 <button className={styles.confirmBtn} onClick={handleConfirm}>
                   Confirm
