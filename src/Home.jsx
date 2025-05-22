@@ -17,7 +17,7 @@ import backIcon from "./assets/images/back-btn.png";
 import allowanceIcon from "./assets/images/allowance.png";
 import salaryIcon from "./assets/images/salary.png";
 import loanIcon from "./assets/images/salary.png";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 export default function Home() {
   const addActivityModal = useRef();
@@ -65,10 +65,44 @@ export default function Home() {
   };
 
   const [activityType, setActivityType] = useState("");
-  const [balance, setBalance] = useState(1000);
-  const [expenses, setExpenses] = useState(0);
+  const [balance, setBalance] = useState(() => {
+    const stored = localStorage.getItem("balance");
+    return stored ? parseFloat(stored) : 1000;
+  });
+  const [expenses, setExpenses] = useState(() => {
+    const stored = localStorage.getItem("expenses");
+    return stored ? parseFloat(stored) : 0;
+  });
   const [updateType, setUpdateType] = useState("");
   const [date, setDate] = useState("");
+  const [recentActivities, setRecentActivities] = useState(() => {
+    const stored = localStorage.getItem("recentActivities");
+    return stored ? JSON.parse(stored) : [];
+  });
+
+  const activityIcons = {
+    Grocery: groceryIcon,
+    Foods: foodsIcon,
+    Clothes: clothesIcon,
+    Education: educationIcon,
+    Bills: billsIcon,
+    Shopping: shoppingIcon,
+    Allowance: allowanceIcon,
+    Salary: salaryIcon,
+    Loan: loanIcon,
+  };
+
+  useEffect(() => {
+    localStorage.setItem("balance", balance);
+  }, [balance]);
+
+  useEffect(() => {
+    localStorage.setItem("expenses", expenses);
+  }, [expenses]);
+
+  useEffect(() => {
+    localStorage.setItem("recentActivities", JSON.stringify(recentActivities));
+  }, [recentActivities]);
 
   const amountRef = useRef();
   const dateRef = useRef();
@@ -83,7 +117,8 @@ export default function Home() {
 
   const handleConfirm = () => {
     const value = parseFloat(amountRef.current.value);
-    const date = dateRef.current.value;
+    const selectedDate = dateRef.current.value;
+
     if (isNaN(value) || value <= 0) {
       console.log("Invalid amount");
       return;
@@ -91,14 +126,31 @@ export default function Home() {
 
     if (balance >= value) {
       setBalance(balance - value);
-      console.log("Update: -", value);
       setExpenses((prev) => prev + value);
-      console.log(balance);
-      console.log(date);
+      setDate(selectedDate);
+
+      setRecentActivities((prev) => {
+        const newActivity = {
+          type: activityType,
+          date: selectedDate,
+          amount: value,
+          icon: getImageSrc(activityType),
+        };
+
+        const updated = [newActivity, ...prev];
+        return updated.slice(0, 3);
+      });
+
+      amountRef.current.value = "";
+      dateRef.current.value = "";
+      setActivityType("");
+      setUpdateType("");
     } else {
       console.log("Not enough balance");
     }
   };
+
+  const getImageSrc = (type) => activityIcons[type] || DefaultIcon;
 
   return (
     <>
@@ -166,7 +218,6 @@ export default function Home() {
                 </div>
               </div>
             </div>
-
             <div className={styles.recentActWrapper}>
               {/* Recent Acitivities */}
               <div className={styles.recentTop}>
@@ -178,54 +229,38 @@ export default function Home() {
                 />
               </div>
 
-              <div className={styles.recentActivities}>
-                <div className={styles.activity} id="activity1">
-                  <div className={styles.activityIcon}>
-                    <img src={groceryIcon} />
-                  </div>
-                  <div className={styles.nameDate}>
-                    <h2>Grocery</h2>
-                    <h3>April 25, 2025</h3>
-                  </div>
-                  <div className={styles.amount}>- PHP 250</div>
+              {recentActivities.length > 0 && (
+                <div className={styles.recentActivities}>
+                  {recentActivities.map((activity, index) => (
+                    <div key={index} className={styles.activity}>
+                      <div className={styles.activityIcon}>
+                        <img src={activity.icon} alt={activity.type} />
+                      </div>
+                      <div className={styles.nameDate}>
+                        <h2>{activity.type}</h2>
+                        <h3>{activity.date}</h3>
+                      </div>
+                      <div className={styles.amount}>
+                        - PHP {activity.amount}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-
-                <div className={styles.activity} id="activity2">
-                  <div className={styles.activityIcon}>
-                    <img src={groceryIcon} />
-                  </div>
-                  <div className={styles.nameDate}>
-                    <h2>Grocery</h2>
-                    <h3>April 25, 2025</h3>
-                  </div>
-                  <div className={styles.amount}>- PHP 250</div>
-                </div>
-
-                <div className={styles.activity} id="activity3">
-                  <div className={styles.activityIcon}>
-                    <img src={groceryIcon} />
-                  </div>
-                  <div className={styles.nameDate}>
-                    <h2>Grocery</h2>
-                    <h3>April 25, 2025</h3>
-                  </div>
-                  <div className={styles.amount}>- PHP 250</div>
-                </div>
-              </div>
+              )}
             </div>
+
             {/* Add Activity Button */}
             <div className={styles.addIconContainer}>
               <img src={addIcon} onClick={openActivityModal} />
             </div>
 
             {/* --------- MODAlS --------- */}
-
             {/* Add Activity Modal */}
             <div className={styles.addActivityModal} ref={addActivityModal}>
               {/* Contents of Add Activity Modal */}
               <div className={styles.addActivityContent}>
                 <div className={styles.activityTop}>
-                  <h1>Add Acitivity</h1>
+                  <h1>Add Activity</h1>
                   <img
                     src={closeIcon}
                     className={styles.closeBtn}
@@ -250,7 +285,6 @@ export default function Home() {
                 </div>
               </div>
             </div>
-
             {/* Select Type of Expenses Modal */}
             <div className={styles.expensesTypeModal} ref={expensesModal}>
               {/* Contents of Select Type Modal  */}
@@ -346,7 +380,6 @@ export default function Home() {
                 </div>
               </div>
             </div>
-
             <div className={styles.depositTypeModal} ref={depositModal}>
               <div className={styles.depositTypeContent}>
                 <div className={styles.depositTypeTop}>
@@ -406,7 +439,6 @@ export default function Home() {
                 </div>
               </div>
             </div>
-
             <div className={styles.detailsModal} ref={detailsModal}>
               <div className={styles.detailsContent}>
                 <div className={styles.detailsTop}>
@@ -438,7 +470,17 @@ export default function Home() {
                     ref={dateRef}
                   />
                 </div>
-                <button className={styles.confirmBtn} onClick={handleConfirm}>
+                <button
+                  className={styles.confirmBtn}
+                  onClick={() => {
+                    {
+                      handleConfirm();
+                      closeDetailsModal();
+                      closeActivityModal();
+                      displayActivity();
+                    }
+                  }}
+                >
                   Confirm
                 </button>
               </div>
