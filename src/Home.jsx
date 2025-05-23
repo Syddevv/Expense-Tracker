@@ -18,6 +18,7 @@ import allowanceIcon from "./assets/images/allowance.png";
 import salaryIcon from "./assets/images/salary.png";
 import loanIcon from "./assets/images/loan.png";
 import React, { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   const addActivityModal = useRef();
@@ -65,25 +66,23 @@ export default function Home() {
   };
 
   const [activityType, setActivityType] = useState("");
+
   const [balance, setBalance] = useState(() => {
     const stored = localStorage.getItem("balance");
     return stored ? parseFloat(stored) : 1000;
   });
+
   const [expenses, setExpenses] = useState(() => {
     const stored = localStorage.getItem("expenses");
     return stored ? parseFloat(stored) : 0;
   });
+
   const [updateType, setUpdateType] = useState("");
   const [date, setDate] = useState("");
   const [recentActivities, setRecentActivities] = useState(() => {
     const stored = localStorage.getItem("recentActivities");
     return stored ? JSON.parse(stored) : [];
   });
-
-  const [showAddActivityModal, setShowAddActivityModal] = useState(false);
-  const [showExpensesModal, setShowExpensesModal] = useState(false);
-  const [showDepositModal, setShowDepositModal] = useState(false);
-  const [showDetailsModal, setShowDetailsModal] = useState(false);
 
   const activityIcons = {
     Grocery: groceryIcon,
@@ -124,13 +123,13 @@ export default function Home() {
   const handleConfirm = () => {
     const value = parseFloat(amountRef.current.value);
     const selectedDate = dateRef.current.value;
+    let formattedDate = "";
 
-    if (isNaN(value) || value <= 0) {
-      console.log("Invalid amount");
+    if (isNaN(value) || value <= 0 || dateRef.current.value === "") {
+      alert("Please fill in all fields");
       return;
     }
 
-    let formattedDate = "";
     if (selectedDate) {
       const dateObj = new Date(selectedDate);
       formattedDate = dateObj.toLocaleDateString("en-US", {
@@ -168,8 +167,8 @@ export default function Home() {
         icon: getImageSrc(activityType),
         updateType: updateType,
       };
-
       const updated = [newActivity, ...prev];
+      localStorage.setItem("allActivities", JSON.stringify(updated));
       return updated.slice(0, 3);
     });
   };
@@ -194,12 +193,12 @@ export default function Home() {
           </div>
 
           <div className={styles.navigations}>
-            <a href="#" className={styles.homeNav}>
+            <Link to="/" className={styles.homeNav}>
               Home
-            </a>
-            <a href="#" className={styles.historyNav}>
+            </Link>
+            <Link to="/history" className={styles.historyNav}>
               History
-            </a>
+            </Link>
             <a href="#" className={styles.logoutNav}>
               Logout
             </a>

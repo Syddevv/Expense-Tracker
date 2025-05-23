@@ -1,0 +1,54 @@
+/* Add this to Home.module.css or a new CSS file for your table styles */
+
+.historyTableWrapper {
+  margin: 40px auto;
+  width: 90%;
+  max-width: 900px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  padding: 30px 20px;
+}
+
+.historyTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "Poppins", Arial, sans-serif;
+  font-size: 1.25rem;
+  background: #fff;
+}
+
+.historyTable th,
+.historyTable td {
+  border: 2px solid #222;
+  padding: 18px 20px;
+  text-align: center;
+}
+
+.historyTable th {
+  background: #8ec1ff;
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.historyTable td {
+  font-size: 1.15rem;
+  background: #fff;
+}
+
+.historyTable tr:nth-child(even) td {
+  background: #f4f8ff;
+}
+
+@media (max-width: 700px) {
+  .historyTableWrapper {
+    padding: 10px 2px;
+  }
+  .historyTable th,
+  .historyTable td {
+    padding: 10px 5px;
+    font-size: 1rem;
+  }
+}
