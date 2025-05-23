@@ -16,7 +16,7 @@ import closeIcon from "./assets/images/close-btn.png";
 import backIcon from "./assets/images/back-btn.png";
 import allowanceIcon from "./assets/images/allowance.png";
 import salaryIcon from "./assets/images/salary.png";
-import loanIcon from "./assets/images/salary.png";
+import loanIcon from "./assets/images/loan.png";
 import React, { useState, useRef, useEffect } from "react";
 
 export default function Home() {
@@ -80,6 +80,11 @@ export default function Home() {
     return stored ? JSON.parse(stored) : [];
   });
 
+  const [showAddActivityModal, setShowAddActivityModal] = useState(false);
+  const [showExpensesModal, setShowExpensesModal] = useState(false);
+  const [showDepositModal, setShowDepositModal] = useState(false);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+
   const activityIcons = {
     Grocery: groceryIcon,
     Foods: foodsIcon,
@@ -90,6 +95,7 @@ export default function Home() {
     Allowance: allowanceIcon,
     Salary: salaryIcon,
     Loan: loanIcon,
+    Others: othersIcon,
   };
 
   useEffect(() => {
@@ -124,33 +130,58 @@ export default function Home() {
       return;
     }
 
-    if (balance >= value) {
-      setBalance(balance - value);
-      setExpenses((prev) => prev + value);
-      setDate(selectedDate);
-
-      setRecentActivities((prev) => {
-        const newActivity = {
-          type: activityType,
-          date: selectedDate,
-          amount: value,
-          icon: getImageSrc(activityType),
-        };
-
-        const updated = [newActivity, ...prev];
-        return updated.slice(0, 3);
+    let formattedDate = "";
+    if (selectedDate) {
+      const dateObj = new Date(selectedDate);
+      formattedDate = dateObj.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
       });
-
-      amountRef.current.value = "";
-      dateRef.current.value = "";
-      setActivityType("");
-      setUpdateType("");
-    } else {
-      console.log("Not enough balance");
     }
+
+    if (updateType === "Expenses") {
+      if (balance >= value) {
+        setBalance(balance - value);
+        setExpenses((prev) => prev + value);
+        setDate(formattedDate);
+      } else {
+        console.log("Not enough balance");
+      }
+    } else {
+      if (amountRef.current.value > 0) {
+        setBalance(value + balance);
+        setDate(formattedDate);
+      }
+    }
+
+    amountRef.current.value = "";
+    dateRef.current.value = "";
+    setActivityType("");
+    setUpdateType("");
+
+    setRecentActivities((prev) => {
+      const newActivity = {
+        type: activityType,
+        date: formattedDate,
+        amount: value,
+        icon: getImageSrc(activityType),
+        updateType: updateType,
+      };
+
+      const updated = [newActivity, ...prev];
+      return updated.slice(0, 3);
+    });
   };
 
   const getImageSrc = (type) => activityIcons[type] || DefaultIcon;
+
+  const today = new Date();
+  const formattedToday = today.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 
   return (
     <>
@@ -191,7 +222,8 @@ export default function Home() {
                   <h1 className={styles.balanceAmount} id="balance">
                     PHP {balance}
                   </h1>
-                  <h3 className={styles.date}>April 30, 2025</h3>
+                  <h4 className={styles.date}>{formattedToday}</h4>{" "}
+                  {/* Add this line */}
                 </div>
 
                 <div>
@@ -218,6 +250,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
+
             <div className={styles.recentActWrapper}>
               {/* Recent Acitivities */}
               <div className={styles.recentTop}>
@@ -240,8 +273,18 @@ export default function Home() {
                         <h2>{activity.type}</h2>
                         <h3>{activity.date}</h3>
                       </div>
-                      <div className={styles.amount}>
-                        - PHP {activity.amount}
+                      <div
+                        className={styles.amount}
+                        style={{
+                          color:
+                            activity.updateType === "Expenses"
+                              ? "red"
+                              : "green",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {activity.updateType === "Expenses" ? "- PHP" : "+ PHP"}{" "}
+                        {activity.amount}
                       </div>
                     </div>
                   ))}
@@ -272,19 +315,29 @@ export default function Home() {
                 <div className={styles.choices}>
                   <div
                     className={styles.addExpenses}
-                    onClick={openExpensesModal}
+                    onClick={() => {
+                      openExpensesModal();
+                      setUpdateType("Expenses");
+                    }}
                   >
                     <img src={expensesImg} />
                     <h1>Expenses</h1>
                   </div>
 
-                  <div className={styles.deposit} onClick={openDepositModal}>
+                  <div
+                    className={styles.deposit}
+                    onClick={() => {
+                      openDepositModal();
+                      setUpdateType("Deposit");
+                    }}
+                  >
                     <img src={depositIcon} />
                     <h1>Deposit</h1>
                   </div>
                 </div>
               </div>
             </div>
+
             {/* Select Type of Expenses Modal */}
             <div className={styles.expensesTypeModal} ref={expensesModal}>
               {/* Contents of Select Type Modal  */}
@@ -380,6 +433,8 @@ export default function Home() {
                 </div>
               </div>
             </div>
+
+            {/* Select Type of Deposit Modal */}
             <div className={styles.depositTypeModal} ref={depositModal}>
               <div className={styles.depositTypeContent}>
                 <div className={styles.depositTypeTop}>
@@ -420,6 +475,7 @@ export default function Home() {
                     onClick={() => {
                       openDetailsModal();
                       getUpdateType("Deposit");
+                      setActivity("Loan");
                     }}
                   >
                     <img src={loanIcon} />
@@ -439,6 +495,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
+
             <div className={styles.detailsModal} ref={detailsModal}>
               <div className={styles.detailsContent}>
                 <div className={styles.detailsTop}>
@@ -477,7 +534,6 @@ export default function Home() {
                       handleConfirm();
                       closeDetailsModal();
                       closeActivityModal();
-                      displayActivity();
                     }
                   }}
                 >
