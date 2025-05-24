@@ -167,6 +167,7 @@ export default function Home() {
         icon: getImageSrc(activityType),
         updateType: updateType,
       };
+
       const updated = [newActivity, ...prev];
       localStorage.setItem("allActivities", JSON.stringify(updated));
       return updated.slice(0, 3);
@@ -193,15 +194,21 @@ export default function Home() {
           </div>
 
           <div className={styles.navigations}>
-            <Link to="/" className={styles.homeNav}>
+            <Link to="/home" className={styles.homeNav}>
               Home
             </Link>
             <Link to="/history" className={styles.historyNav}>
               History
             </Link>
-            <a href="#" className={styles.logoutNav}>
+            <Link
+              to="/"
+              className={styles.logoutNav}
+              onClick={() => {
+                localStorage.removeItem("isLoggedIn");
+              }}
+            >
               Logout
-            </a>
+            </Link>
           </div>
         </div>
 

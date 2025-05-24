@@ -28,9 +28,9 @@ export default function History() {
           <Link to="/history" className={styles.historyNav}>
             History
           </Link>
-          <a href="#" className={styles.logoutNav}>
+          <Link to="/" className={styles.logoutNav}>
             Logout
-          </a>
+          </Link>
         </div>
       </div>
 

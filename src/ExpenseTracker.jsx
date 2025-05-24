@@ -21,6 +21,7 @@ export default function ExpenseTracker() {
     );
 
     if (user) {
+      localStorage.setItem("isLoggedIn", "true");
       navigate("/home");
     } else {
       alert("Invalid email or password.");
