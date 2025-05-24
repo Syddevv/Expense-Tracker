@@ -5,13 +5,15 @@ import History from "./History";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<ExpenseTracker />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/history" element={<History />} />
-      </Routes>
-    </Router>
+    <BrowserRouter basename="/Expense-Tracker">
+      <Router>
+        <Routes>
+          <Route path="/" element={<ExpenseTracker />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/history" element={<History />} />
+        </Routes>
+      </Router>
+    </BrowserRouter>
   );
 }
 
